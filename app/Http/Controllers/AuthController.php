@@ -33,15 +33,21 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|confirmed'
         ]);
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
-        $user->save();
-        return response()->json([
-            'message' => 'Successfully created user!'
-        ], 201);
+        try {
+            $user = new User([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]);
+            $user->save();
+            return response()->json([
+                'message' => 'Successfully created user!'
+            ], 201);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th
+            ], 422);
+        }
     }
 
     /**
@@ -60,24 +66,29 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-
-        if (!Auth::attempt($credentials))
+        try {
+            if (!Auth::attempt($credentials))
+                return response()->json([
+                    'message' => 'Unauthorized'
+                ], 401);
+            $user = $request->user();
+            $tokenResult = $user->createToken('Personal Access Token');
+            $token = $tokenResult->token;
+            if ($request->remember_me)
+                $token->expires_at = Carbon::now()->addDays(3);
+            $token->save();
             return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        if ($request->remember_me)
-            $token->expires_at = Carbon::now()->addDays(3);
-        $token->save();
-        return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type' => 'Bearer',
-            'expires_at' => Carbon::parse(
-                $tokenResult->token->expires_at
-            )->toDateTimeString()
-        ]);
+                'access_token' => $tokenResult->accessToken,
+                'token_type' => 'Bearer',
+                'expires_at' => Carbon::parse(
+                    $tokenResult->token->expires_at
+                )->toDateTimeString()
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th
+            ], 422);
+        }
     }
 
     /**
