@@ -30,3 +30,8 @@ Route::group([
     Route::get('logout', 'AuthController@logout');
     Route::get('user', 'AuthController@user');
 });
+Route::group([
+    'middleware' => 'auth:api'
+], function () {
+    Route::get('create_alert', 'AlerteController@create_alert');
+});

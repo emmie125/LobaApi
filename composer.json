@@ -17,6 +17,7 @@
         "laravel/sanctum": "^2.12",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^2.4",
+        "twilio/sdk": "^6.32",
         "tymon/jwt-auth": " ^1.0.1"
     },
     "require-dev": {
