@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -62,16 +62,20 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'min:6'],
         ]);
         try {
-            if (!Auth::attempt($credentials))
+
+            if (!Auth::attempt($credentials)) {
                 return response()->json([
                     'message' => 'Unauthorized'
                 ], 401);
+            }
             $user = $request->user();
+
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;
             if ($request->remember_me)
