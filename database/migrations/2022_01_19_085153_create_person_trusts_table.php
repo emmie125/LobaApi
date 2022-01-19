@@ -18,7 +18,7 @@ class CreatePersonTrustsTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('number');
-            $table->string('imageprofil');
+            $table->string('imageProfil');
         });
     }
 

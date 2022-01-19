@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\PersonTrust;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PersonTrustController extends Controller
 {
@@ -34,11 +36,22 @@ class PersonTrustController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $request->validate([
+
+        Validator::make($request->all(), [
             'name' => 'required|string',
-            'numero' => 'required|string|email|unique:users',
-            'imageProfil' => 'required|string|confirmed'
-        ]);
+            'numero' => 'required|string',
+            'imageProfil' => 'string'
+        ])->validate();
+        try {
+            PersonTrust::create($request->all());
+            return response()->json([
+                'success' => "created successfully"
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'fail' => $th
+            ], 402);
+        }
     }
 
     /**
