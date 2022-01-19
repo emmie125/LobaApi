@@ -37,7 +37,7 @@ class AlerteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create_alert(Request $request)
+    public function createAlert(Request $request)
     {
         $sid = "AC6e38e8372b28634c54b253a9fe871a68";
         $token = "1e8c8decdb15c04336821488eb43ae89";

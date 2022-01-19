@@ -33,5 +33,10 @@ Route::group([
 Route::group([
     'middleware' => 'auth:api'
 ], function () {
-    Route::get('create_alert', 'AlerteController@create_alert');
+    Route::get('create_alert', 'AlerteController@createAlert');
+});
+Route::group([
+    'middleware' => 'auth:api'
+], function () {
+    Route::apiResource('person_trust', 'PersonTrustController');
 });

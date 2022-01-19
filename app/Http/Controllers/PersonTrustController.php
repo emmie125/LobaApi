@@ -34,8 +34,11 @@ class PersonTrustController extends Controller
      */
     public function store(Request $request)
     {
-        $id = $request->user()->id;
-        //
+        $validate = $request->validate([
+            'name' => 'required|string',
+            'numero' => 'required|string|email|unique:users',
+            'imageProfil' => 'required|string|confirmed'
+        ]);
     }
 
     /**
