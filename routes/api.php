@@ -1,9 +1,12 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PersonTrustController;
+use App\Http\Controllers\Auth\RegisterController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::group([
     'prefix' => 'auth'
@@ -35,8 +40,4 @@ Route::group([
 ], function () {
     Route::get('create_alert', 'AlerteController@createAlert');
 });
-Route::group([
-    'middleware' => 'auth:api'
-], function () {
-    Route::apiResource('person_trust', 'PersonTrustController');
-});
+Route::apiResource('/person_trusts', 'PersonTrustController');

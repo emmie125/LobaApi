@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Http\Resources\PersonTrustResource;
 use App\PersonTrust;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,17 +17,14 @@ class PersonTrustController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        try {
+            $personTrust = PersonTrust::paginate(5);
+            return  PersonTrustResource::collection($personTrust);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'fail' => $th
+            ], 400);
+        }
     }
 
     /**
@@ -36,14 +35,22 @@ class PersonTrustController extends Controller
      */
     public function store(Request $request)
     {
-
-        Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'numero' => 'required|string',
-            'imageProfil' => 'string'
-        ])->validate();
+            'phoneNumber' => 'required|string',
+            'imageProfil' => 'string',
+            'user_id' => 'exists:users,id'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'fail' => $validator->errors(),
+            ], 422);
+        }
         try {
-            PersonTrust::create($request->all());
+            $data = $request->all();
+            PersonTrust::create($data);
+
             return response()->json([
                 'success' => "created successfully"
             ], 200);
@@ -61,17 +68,6 @@ class PersonTrustController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

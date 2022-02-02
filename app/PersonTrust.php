@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PersonTrust extends Model
 {
-    protected $fillable = ['name', 'number', 'imageProfil'];
+    protected $fillable = ['name', 'phoneNumber', 'imageProfil', 'user_id'];
 
     public function user()
     {
