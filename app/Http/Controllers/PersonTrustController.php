@@ -12,13 +12,16 @@ class PersonTrustController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function indexPerson(Request $request)
     {
         try {
-            $personTrust = PersonTrust::paginate(5);
+            $user_id = $request->user()->id;
+
+            $personTrust = PersonTrust::where('user_id', '=', $user_id)->get();
             return  PersonTrustResource::collection($personTrust);
         } catch (\Throwable $th) {
             return response()->json([

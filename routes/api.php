@@ -34,10 +34,8 @@ Route::group([
 ], function () {
     Route::get('logout', 'AuthController@logout');
     Route::get('user', 'AuthController@user');
-});
-Route::group([
-    'middleware' => 'auth:api'
-], function () {
+    Route::get('/person_trusts', 'PersonTrustController@indexPerson');
     Route::get('create_alert', 'AlerteController@createAlert');
 });
-Route::apiResource('/person_trusts', 'PersonTrustController');
+
+Route::post('/person_trusts', 'PersonTrustController@store');
