@@ -16,7 +16,7 @@ class PersonTrustController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexPerson(Request $request)
+    public function index(Request $request)
     {
         try {
             $user_id = $request->user()->id;
@@ -38,11 +38,11 @@ class PersonTrustController extends Controller
      */
     public function store(Request $request)
     {
+        $user_id = $request->user()->id;
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'phoneNumber' => 'required|string',
             'imageProfil' => 'string',
-            'user_id' => 'exists:users,id'
         ]);
 
         if ($validator->fails()) {
@@ -52,7 +52,7 @@ class PersonTrustController extends Controller
         }
         try {
             $data = $request->all();
-            PersonTrust::create($data);
+            PersonTrust::create($data, ['user_id' => $user_id]);
 
             return response()->json([
                 'success' => "created successfully"
@@ -84,7 +84,34 @@ class PersonTrustController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user_id = $request->user()->id;
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'phoneNumber' => 'required|string',
+            'imageProfil' => 'string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'fail' => $validator->errors(),
+            ], 422);
+        }
+        try {
+            $data = $request->all();
+            PersonTrust::where('id', $data['id'])->update([
+                'name' => $data['name'],
+                'phoneNumber' => $data['phoneNumber'],
+                'imageProfil' => $data['imageProfil'],
+            ]);
+
+            return response()->json([
+                'success' => "updated successfully"
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'fail' => $th
+            ], 402);
+        }
     }
 
     /**
