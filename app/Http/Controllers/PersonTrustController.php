@@ -52,7 +52,11 @@ class PersonTrustController extends Controller
         }
         try {
             $data = $request->all();
-            PersonTrust::create($data, ['user_id' => $user_id]);
+            PersonTrust::create([
+                'name' => $data['name'],
+                'phoneNumber' => $data['phoneNumber'],
+                'imageProfil' => $data['imageProfil'], 'user_id' => $user_id
+            ]);
 
             return response()->json([
                 'success' => "created successfully"
@@ -84,7 +88,6 @@ class PersonTrustController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user_id = $request->user()->id;
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'phoneNumber' => 'required|string',
@@ -122,6 +125,17 @@ class PersonTrustController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+
+            PersonTrust::where('id', $id)->delete();
+
+            return response()->json([
+                'success' => "deleted successfully"
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'fail' => $th
+            ], 402);
+        }
     }
 }
