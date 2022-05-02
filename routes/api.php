@@ -37,4 +37,7 @@ Route::group([
     // Route::get('/person_trusts', 'PersonTrustController@index');
     Route::get('create_alert', 'AlerteController@createAlert');
     Route::apiResource('/person_trusts', 'PersonTrustController');
+    Route::apiResource('/type_conseils', 'TypeConseilController');
+    Route::apiResource('/conseils', 'ConseilController');
+    Route::apiResource('/likes', 'LikeController');
 });
